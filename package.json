@@ -9,7 +9,7 @@
     "build": "node scripts/build.mjs",
     "preview": "node server.mjs --dist",
     "lint": "node scripts/lint.mjs",
-    "test": "node --test"
+    "test": "node scripts/test.mjs"
   },
   "engines": { "node": ">=20" },
   "license": "MIT"
