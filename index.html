@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#090c2b">
+  <meta name="description" content="登録なしで試せる、やさしいオラクル占いのランディングページデモ。">
+  <title>LUMINA｜未来を決めつけない、あなたのための占い</title>
+  <link rel="icon" href="/public/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">本文へ移動</a>
+  <header class="site-header">
+    <a class="brand" href="#top" aria-label="LUMINA トップへ"><span class="brand-mark">☾</span><span>LUMINA</span></a>
+    <button id="menu-button" class="menu-button" type="button" aria-expanded="false" aria-controls="nav-links"><span></span><span></span><span></span><span class="sr-only">メニューを開く</span></button>
+    <nav id="nav-links" class="nav-links" aria-label="メインナビゲーション">
+      <a href="#reading">無料鑑定</a><a href="#features">特徴</a><a href="#pricing">料金</a><a href="#faq">よくある質問</a>
+      <a class="nav-cta" href="#reading">今すぐ占う</a>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section id="top" class="hero">
+      <div class="aurora aurora-one"></div><div class="aurora aurora-two"></div>
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <p class="eyebrow"><span></span>未来を決めつけない占い</p>
+          <h1>心の霧に、<br><em>小さな光</em>を。</h1>
+          <p class="hero-lead">恋愛・仕事・お金・自分自身。今の気持ちを選ぶだけで、今日を少し進みやすくするオラクルメッセージを届けます。</p>
+          <div class="hero-actions">
+            <a class="button button-primary" href="#reading">無料でカードを引く <span>→</span></a>
+            <a class="button button-ghost" href="#how">使い方を見る</a>
+          </div>
+          <div class="trust-row" aria-label="サービスの特徴"><span>✓ 登録不要</span><span>✓ 匿名で体験</span><span>✓ 1分で結果</span></div>
+        </div>
+        <div class="hero-visual" aria-label="光るオラクルを描いたビジュアル">
+          <img src="/public/hero-oracle.svg" alt="星空の中で光る水晶とオラクルカード">
+          <div class="daily-pulse glass-card">
+            <div id="daily-symbol" class="pulse-symbol" aria-hidden="true">✦</div>
+            <div><span>今日のカード</span><strong id="daily-card">星の庭</strong><p id="daily-action">本音を一文だけメモする</p></div>
+          </div>
+        </div>
+      </div>
+      <div class="hero-bottom-fade"></div>
+    </section>
+
+    <section class="mini-dashboard" aria-label="利用状況">
+      <div class="container dashboard-grid">
+        <div><span class="dashboard-icon">☾</span><p>本日の無料回数<strong id="quota-count">3 / 3</strong></p></div>
+        <div><span class="dashboard-icon">✦</span><p>あなたの連続記録<strong id="streak-count">0日</strong></p></div>
+        <p id="quota-note" class="quota-note">本日はあと3回、無料デモを試せます。</p>
+      </div>
+    </section>
+
+    <section id="reading" class="section reading-section">
+      <div class="container">
+        <div class="section-heading centered">
+          <p class="eyebrow"><span></span>FREE ORACLE</p>
+          <h2>いま気になることを、<br>ひとつ選んでください。</h2>
+          <p>生年月日は任意です。入力内容はブラウザ内だけに保存され、サーバーへ送信されません。</p>
+        </div>
+
+        <form id="reading-form" class="reading-panel glass-card">
+          <div class="step-heading"><span>01</span><div><h3>テーマを選ぶ</h3><p>いちばん心に近いものを直感で。</p></div></div>
+          <div class="concern-grid" role="group" aria-label="占いたいテーマ">
+            <button class="concern-button is-active" type="button" data-concern="love" aria-pressed="true"><span>♡</span><strong>恋愛</strong><small>相手の気持ち・関係</small></button>
+            <button class="concern-button" type="button" data-concern="work" aria-pressed="false"><span>◇</span><strong>仕事</strong><small>転機・人間関係</small></button>
+            <button class="concern-button" type="button" data-concern="money" aria-pressed="false"><span>◉</span><strong>金運</strong><small>使い方・これから</small></button>
+            <button class="concern-button" type="button" data-concern="self" aria-pressed="false"><span>✦</span><strong>自分探し</strong><small>本音・次の一歩</small></button>
+          </div>
+          <input id="concern-input" type="hidden" value="love">
+
+          <div class="step-heading second"><span>02</span><div><h3>あなたのこと</h3><p>呼び名だけでも占えます。</p></div></div>
+          <div class="field-grid">
+            <label><span>ニックネーム <small>任意</small></span><input id="nickname" name="nickname" maxlength="20" autocomplete="nickname" placeholder="例：ルナ"></label>
+            <label><span>生年月日 <small>任意</small></span><input id="birth-date" name="birthDate" type="date" autocomplete="bday"></label>
+          </div>
+          <div class="privacy-note"><span>♢</span><p><strong>プライバシーを大切にします。</strong>このデモは入力内容を外部へ送信しません。</p></div>
+          <button id="draw-button" class="button button-primary draw-button" type="submit"><span>オラクルカードを引く</span><b aria-hidden="true">✦</b></button>
+        </form>
+
+        <section id="reading-result" class="result-panel" hidden aria-live="polite">
+          <div class="result-card glass-card">
+            <div class="result-oracle"><p id="result-category">恋愛のオラクル</p><span id="result-symbol">☾</span><strong id="result-card-name">月の鏡</strong></div>
+            <div class="result-content">
+              <span class="result-label">TODAY'S MESSAGE</span>
+              <h3 id="result-headline">静かな本音が、次の道を映します。</h3>
+              <p id="result-interpretation"></p>
+              <div class="result-details">
+                <div><span>今日の一歩</span><strong id="result-action"></strong></div>
+                <div><span>ラッキーカラー</span><strong id="result-color"></strong></div>
+                <div><span>意識する言葉</span><strong id="result-word"></strong></div>
+              </div>
+              <button id="copy-result" class="text-button" type="button">結果をコピー</button>
+            </div>
+          </div>
+          <div class="premium-preview glass-card">
+            <div><span class="pill">PREMIUM PREVIEW</span><h3>このカードを、もう少し深く読む</h3><p>無料結果の続きとして、具体的な振り返りと7日間の流れを確認できます。</p><ul id="premium-list"></ul></div>
+            <button class="button button-gold" type="button" data-open-premium>詳細鑑定を見る <span>→</span></button>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <section id="how" class="section how-section">
+      <div class="container">
+        <div class="section-heading"><p class="eyebrow"><span></span>HOW IT WORKS</p><h2>迷っている時ほど、<br>かんたんに。</h2></div>
+        <div class="steps-grid">
+          <article><span>01</span><div class="step-icon">◇</div><h3>悩みを選ぶ</h3><p>恋愛・仕事・金運・自分探しから、今のテーマを選択。</p></article>
+          <article><span>02</span><div class="step-icon">☾</div><h3>カードを引く</h3><p>呼び名や生年月日をもとに、今日の一枚を表示します。</p></article>
+          <article><span>03</span><div class="step-icon">✦</div><h3>一歩に変える</h3><p>怖い予言ではなく、今日から試せる小さな行動へ。</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section id="features" class="section features-section">
+      <div class="container feature-grid">
+        <div class="feature-art glass-card"><div class="orbit"><span>☾</span><i></i><i></i><i></i></div><p>YOUR INNER COMPASS</p></div>
+        <div><p class="eyebrow"><span></span>WHY LUMINA</p><h2>また開きたくなる理由は、<br>不安ではなく発見。</h2>
+          <div class="feature-list">
+            <article><span>01</span><div><h3>毎日変わる、短い気づき</h3><p>その日のテーマと行動を1分で受け取り、生活の中で試せます。</p></div></article>
+            <article><span>02</span><div><h3>あなたの履歴は端末の中だけ</h3><p>この試作版はアカウント不要。保存内容はブラウザからいつでも消せます。</p></div></article>
+            <article><span>03</span><div><h3>有料の価値を先に見せる</h3><p>料金と得られる内容を明示し、煽りや隠れた継続課金を使いません。</p></div></article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="pricing" class="section pricing-section">
+      <div class="container">
+        <div class="section-heading centered"><p class="eyebrow"><span></span>PLANS</p><h2>必要な深さだけ、選べる。</h2><p>以下はプロトタイプ用の料金表示です。実際の決済は行われません。</p></div>
+        <div class="pricing-grid">
+          <article class="price-card"><span class="pill">FREE</span><h3>毎日のオラクル</h3><p class="price"><strong>¥0</strong> / ずっと</p><ul><li>1日3回のカード鑑定</li><li>今日の一歩・色・言葉</li><li>ブラウザ内の履歴保存</li></ul><a class="button button-ghost" href="#reading">無料で試す</a></article>
+          <article class="price-card featured"><span class="pill">おすすめ・デモ</span><h3>ルミナ・プラス</h3><p class="price"><strong>¥980</strong> / 月</p><ul><li>テーマ別7日間リーディング</li><li>結果履歴と振り返りノート</li><li>追加質問の深掘りガイド</li><li>いつでも解約できる設計</li></ul><button class="button button-gold" type="button" data-open-premium>内容を確認する</button></article>
+          <article class="price-card"><span class="pill">ONE TIME・デモ</span><h3>一回だけの詳細鑑定</h3><p class="price"><strong>¥480</strong> / 1回</p><ul><li>選んだテーマの詳細結果</li><li>7日間の行動ヒント</li><li>買い切り・自動更新なし</li></ul><button class="button button-ghost" type="button" data-open-premium>詳細を見る</button></article>
+        </div>
+      </div>
+    </section>
+
+    <section id="faq" class="section faq-section">
+      <div class="container faq-grid"><div><p class="eyebrow"><span></span>FAQ</p><h2>よくある質問</h2><p>安心して試せるよう、先に大切なことをお伝えします。</p></div><div class="faq-list">
+        <details><summary>本当に無料ですか？<span>＋</span></summary><p>このローカルデモのカード鑑定は無料です。料金プランは将来のサービス設計例で、決済処理はありません。</p></details>
+        <details><summary>入力した情報は送信されますか？<span>＋</span></summary><p>送信されません。履歴はブラウザの localStorage にのみ保存され、リセット操作で削除できます。</p></details>
+        <details><summary>占いの結果どおりに行動すべきですか？<span>＋</span></summary><p>結果は自己理解のきっかけです。大切な判断は事実や専門家の意見も確認し、ご自身で決めてください。</p></details>
+        <details><summary>怖い結果が出ることはありますか？<span>＋</span></summary><p>ありません。未来を断定したり不安を煽ったりせず、選択肢と小さな行動を提案する文章だけを使用しています。</p></details>
+      </div></div>
+    </section>
+
+    <section class="ethics-banner"><div class="container"><span>✦</span><p><strong>占いは、人生を決めるものではなく、考えるための小さな鏡。</strong>医療・法律・金融などの重要な判断は、資格を持つ専門家へご相談ください。</p></div></section>
+  </main>
+
+  <footer class="site-footer"><div class="container footer-grid"><div><a class="brand" href="#top"><span class="brand-mark">☾</span><span>LUMINA</span></a><p>未来を決めつけず、今日の自分を照らす。</p></div><div><strong>サービス</strong><a href="#reading">無料鑑定</a><a href="#features">特徴</a><a href="#pricing">料金</a></div><div><strong>このデモについて</strong><a href="https://github.com/univcorp2-ctrl/lumina-fortune-landing">GitHub</a><button id="reset-demo" class="footer-button" type="button">開発用：履歴をリセット</button></div></div><div class="container footer-bottom"><span>© 2026 LUMINA prototype</span><span>Entertainment & self-reflection only.</span></div></footer>
+
+  <a class="mobile-cta" href="#reading">無料でカードを引く <span>✦</span></a>
+
+  <dialog id="premium-dialog" class="premium-dialog"><div class="dialog-inner"><button id="close-dialog" class="dialog-close" type="button" aria-label="閉じる">×</button><span class="pill">PROTOTYPE</span><h2>詳細鑑定は、まだ購入されません。</h2><p>これは有料導線のデザイン確認用です。本番では、購入前に内容・価格・更新条件・解約方法を明確に表示します。</p><div class="dialog-summary"><span>月額プラン例</span><strong>¥980 / 月</strong><small>自動更新・いつでも解約可能という想定</small></div><ul><li>7日間の流れと具体的な行動</li><li>結果の履歴と振り返り</li><li>テーマ別の追加質問</li></ul><button class="button button-gold" type="button" onclick="document.getElementById('premium-dialog').close()">デモに戻る</button></div></dialog>
+
+  <script type="module" src="/src/app.js"></script>
+</body>
+</html>
