@@ -1,0 +1,36 @@
+name: Generate README design asset
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - public/hero-oracle.svg
+      - README.template.md
+      - .github/workflows/generate-readme-assets.yml
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Install SVG renderer
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y librsvg2-bin
+      - name: Render GPT Image 2 inspired concept asset
+        run: |
+          mkdir -p docs/assets
+          rsvg-convert --width 1400 --height 1400 public/hero-oracle.svg > docs/assets/generated-readme-hero.png
+          cp README.template.md README.md
+      - name: Commit generated asset and README
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add README.md docs/assets/generated-readme-hero.png
+          git diff --cached --quiet || git commit -m "docs: publish generated design asset and README"
+          git push
