@@ -12,12 +12,19 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: readme-assets-main
+  cancel-in-progress: true
+
 jobs:
   generate:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - name: Checkout latest main
+        uses: actions/checkout@v7
+        with:
+          ref: main
+          fetch-depth: 0
       - name: Install SVG renderer
         run: |
           sudo apt-get update
@@ -32,5 +39,9 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add README.md docs/assets/generated-readme-hero.png
-          git diff --cached --quiet || git commit -m "docs: publish generated design asset and README"
-          git push
+          if git diff --cached --quiet; then
+            echo "Generated assets are already current."
+            exit 0
+          fi
+          git commit -m "docs: publish generated design asset and README"
+          git push origin HEAD:main
