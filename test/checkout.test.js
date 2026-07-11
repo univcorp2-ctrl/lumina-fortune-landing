@@ -32,10 +32,5 @@ test('checkout rejects insecure public origins and invalid emails', () => {
 
 test('configuration requires Stripe and seller disclosure fields', () => {
   assert.deepEqual(getMissingCheckoutSettings({}), ['STRIPE_SECRET_KEY', 'SELLER_NAME', 'SELLER_ADDRESS', 'SUPPORT_EMAIL']);
-  assert.deepEqual(getMissingCheckoutSettings({
-    STRIPE_SECRET_KEY: 'sk_test_x',
-    SELLER_NAME: 'Example',
-    SELLER_ADDRESS: 'Tokyo',
-    SUPPORT_EMAIL: 'support@example.com'
-  }), []);
+  assert.deepEqual(getMissingCheckoutSettings({ STRIPE_SECRET_KEY: 'sk_test_x', SELLER_NAME: 'Example', SELLER_ADDRESS: 'Tokyo', SUPPORT_EMAIL: 'support@example.com' }), []);
 });
