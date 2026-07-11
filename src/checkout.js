@@ -1,41 +1,21 @@
 export const PLAN_CATALOG = Object.freeze({
   detailed: Object.freeze({
-    id: 'detailed',
-    mode: 'payment',
-    name: 'LUMINA 一回だけの詳細鑑定',
+    id: 'detailed', mode: 'payment', name: 'LUMINA 一回だけの詳細鑑定',
     description: '選んだテーマの詳細結果、7日間の行動ヒント、振り返り質問を含む買い切り鑑定です。',
-    unitAmount: 480,
-    currency: 'jpy',
-    priceLabel: '¥480',
-    cadenceLabel: '1回'
+    unitAmount: 480, currency: 'jpy', priceLabel: '¥480', cadenceLabel: '1回'
   }),
   plus: Object.freeze({
-    id: 'plus',
-    mode: 'subscription',
-    name: 'LUMINA Plus 月額プラン',
+    id: 'plus', mode: 'subscription', name: 'LUMINA Plus 月額プラン',
     description: 'テーマ別7日間リーディング、結果履歴、追加質問ガイドを利用できる月額プランです。',
-    unitAmount: 980,
-    currency: 'jpy',
-    interval: 'month',
-    priceLabel: '¥980',
-    cadenceLabel: '月'
+    unitAmount: 980, currency: 'jpy', interval: 'month', priceLabel: '¥980', cadenceLabel: '月'
   })
 });
 
-export function getPlan(planId) {
-  return PLAN_CATALOG[planId] || null;
-}
+export function getPlan(planId) { return PLAN_CATALOG[planId] || null; }
 
 export function getPublicPlans() {
   return Object.values(PLAN_CATALOG).map(({ id, mode, name, description, unitAmount, currency, priceLabel, cadenceLabel }) => ({
-    id,
-    mode,
-    name,
-    description,
-    unitAmount,
-    currency,
-    priceLabel,
-    cadenceLabel
+    id, mode, name, description, unitAmount, currency, priceLabel, cadenceLabel
   }));
 }
 
@@ -57,7 +37,6 @@ export function buildCheckoutParams(planId, siteOrigin, email = '') {
   const plan = getPlan(planId);
   if (!plan) throw new Error('Unknown plan.');
   if (!isValidEmail(email)) throw new Error('Invalid email.');
-
   const origin = normalizeSiteOrigin(siteOrigin);
   const params = new URLSearchParams();
   params.set('mode', plan.mode);
@@ -72,9 +51,7 @@ export function buildCheckoutParams(planId, siteOrigin, email = '') {
   params.set('line_items[0][price_data][product_data][name]', plan.name);
   params.set('line_items[0][price_data][product_data][description]', plan.description);
   params.set('metadata[plan_id]', plan.id);
-
   if (email) params.set('customer_email', email);
-
   if (plan.mode === 'subscription') {
     params.set('line_items[0][price_data][recurring][interval]', plan.interval);
     params.set('subscription_data[metadata][plan_id]', plan.id);
@@ -83,7 +60,6 @@ export function buildCheckoutParams(planId, siteOrigin, email = '') {
     params.set('payment_intent_data[metadata][plan_id]', plan.id);
     params.set('submit_type', 'pay');
   }
-
   return params;
 }
 
