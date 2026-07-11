@@ -9,9 +9,7 @@ let selectedConcern = 'love';
 let latestReading = null;
 
 function escapeHtml(value) {
-  return String(value).replace(/[&<>'"]/g, (character) => ({
-    '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
-  })[character]);
+  return String(value).replace(/[&<>'"]/g, (character) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' })[character]);
 }
 
 function updateDashboard() {
@@ -19,9 +17,7 @@ function updateDashboard() {
   const streak = computeStreak(history);
   $('#quota-count').textContent = `${quota.remaining} / ${quota.limit}`;
   $('#streak-count').textContent = `${streak}日`;
-  $('#quota-note').textContent = quota.remaining > 0
-    ? `本日はあと${quota.remaining}回、無料デモを試せます。`
-    : '本日の無料デモ分を使いました。明日また新しいカードが開きます。';
+  $('#quota-note').textContent = quota.remaining > 0 ? `本日はあと${quota.remaining}回、無料デモを試せます。` : '本日の無料デモ分を使いました。明日また新しいカードが開きます。';
 }
 
 function renderDailyPulse() {
@@ -57,25 +53,17 @@ function showResult(reading) {
   result.scrollIntoView({ behavior: reducedMotion ? 'auto' : 'smooth', block: 'start' });
 }
 
-function openPremiumDialog() {
-  window.location.assign('/purchase.html');
-}
-
+function openPremiumDialog() { window.location.assign('/purchase.html'); }
 function closePremiumDialog() {
   const dialog = $('#premium-dialog');
   if (dialog.open) dialog.close();
 }
 
 $$('.concern-button').forEach((button) => button.addEventListener('click', () => selectConcern(button.dataset.concern)));
-
 $('#reading-form').addEventListener('submit', (event) => {
   event.preventDefault();
   const submitButton = $('#draw-button');
-  const outcome = runReadingFlow({
-    concern: selectedConcern,
-    nickname: $('#nickname').value,
-    birthDate: $('#birth-date').value
-  }, history);
+  const outcome = runReadingFlow({ concern: selectedConcern, nickname: $('#nickname').value, birthDate: $('#birth-date').value }, history);
   if (!outcome.ok) return openPremiumDialog();
   submitButton.disabled = true;
   submitButton.classList.add('is-loading');
@@ -105,9 +93,7 @@ $('#copy-result').addEventListener('click', async () => {
 
 $$('[data-open-premium]').forEach((button) => button.addEventListener('click', openPremiumDialog));
 $('#close-dialog').addEventListener('click', closePremiumDialog);
-$('#premium-dialog').addEventListener('click', (event) => {
-  if (event.target === $('#premium-dialog')) closePremiumDialog();
-});
+$('#premium-dialog').addEventListener('click', (event) => { if (event.target === $('#premium-dialog')) closePremiumDialog(); });
 $('#reset-demo').addEventListener('click', () => {
   clearDemoData();
   history = [];
