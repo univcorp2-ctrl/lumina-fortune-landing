@@ -58,8 +58,7 @@ function showResult(reading) {
 }
 
 function openPremiumDialog() {
-  const dialog = $('#premium-dialog');
-  if (typeof dialog.showModal === 'function') dialog.showModal();
+  window.location.assign('/purchase.html');
 }
 
 function closePremiumDialog() {
