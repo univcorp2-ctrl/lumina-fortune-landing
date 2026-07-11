@@ -20,10 +20,8 @@ async function loadCheckoutConfig() {
     const response = await fetch('/api/checkout-config', { headers: { Accept: 'application/json' } });
     const config = await response.json();
     checkoutConfigured = Boolean(config.configured);
-
     document.querySelector('#seller-name').textContent = config.seller?.name || '設定待ち';
     document.querySelector('#checkout-mode').textContent = config.stripeMode === 'live' ? '本番決済' : config.stripeMode === 'test' ? 'テスト決済' : '決済設定待ち';
-
     if (!checkoutConfigured) {
       setStatus(`決済設定が未完了です。運営者が ${config.missing.join(' / ')} を設定すると購入できます。`, 'warning');
     } else {
@@ -32,7 +30,6 @@ async function loadCheckoutConfig() {
   } catch {
     setStatus('決済設定を確認できませんでした。時間をおいて再度お試しください。', 'error');
   }
-
   buttons.forEach((button) => { button.disabled = !checkoutConfigured; });
 }
 
@@ -42,10 +39,8 @@ async function startCheckout(button) {
     emailInput.reportValidity();
     return;
   }
-
   buttons.forEach((item) => setLoading(item, item === button));
   setStatus('購入内容を確認し、Stripe Checkoutを準備しています。');
-
   try {
     const response = await fetch('/api/create-checkout-session', {
       method: 'POST',
