@@ -1,115 +1,164 @@
-# LUMINA — 占いWebサービス LP プロトタイプ
+# LUMINA — 占いWebサービス / Stripe Checkout対応
 
-深い紺紫と金色の光を基調にした、**実際に無料鑑定を操作できるランディングページ**です。未来を断定して不安を煽るのではなく、今日の小さな行動へ変換する「自己理解のためのオラクル体験」を設計しています。
+LUMINAは、深い紺紫と金色の光を基調にした、実際に無料鑑定を操作できる占いWebサービスです。無料体験から詳細鑑定の購入までを一つの導線として設計し、恐怖・偽の緊急性・隠れた継続課金を使わないことを原則にしています。
 
-> 2026-07-07 時点の OpenAI 公式ドキュメントで最新の GPT Image モデルとして案内されている **GPT Image 2** を使って最初のビジュアルコンセプトを生成し、その方向性を著作権上安全なオリジナル CSS / SVG と、CIで生成するPNGへ翻訳しました。
+> 最初の画面コンセプトは OpenAI **GPT Image 2** で作成し、その方向性をオリジナルのCSS・SVG・生成PNGへ翻訳しています。
 
 ![GPT Image 2 inspired LUMINA design concept](docs/assets/generated-readme-hero.png)
 
 ![LUMINA architecture and flow](docs/architecture-flow.svg)
 
-## できること
+## Production
 
-- 恋愛・仕事・金運・自分探しからテーマを選ぶ
-- ニックネームと任意の生年月日を使った日替わり鑑定
-- オラクルカード、解釈、今日の一歩、ラッキーカラーを表示
-- 1日3回の無料デモ枠と連続利用日数を表示
-- 結果をブラウザの `localStorage` に保存
-- 有料詳細の価値と料金条件を先に示すプレミアムプレビュー
-- キーボード操作、明確なフォーカス、`prefers-reduced-motion` 対応
-- 依存パッケージなし、Node.js 標準機能だけで開発・テスト・ビルド
+- Site: https://lumina-fortune-landing.pages.dev
+- Purchase: https://lumina-fortune-landing.pages.dev/purchase.html
+- Hosting: Cloudflare Pages
+- Production branch: `main`
+- Build: `npm run build`
+- Output: `dist`
 
-## 最短の起動方法
+## Features
 
-必要なものは Node.js 20 以上だけです。
+### Free reading
+
+- 恋愛・仕事・金運・自分探しの4テーマ
+- ニックネームと任意の生年月日による日替わり鑑定
+- オラクルカード、解釈、今日の一歩、ラッキーカラー、意識する言葉
+- 1日3回の無料デモ枠
+- 連続利用日数
+- ブラウザ内 `localStorage` への履歴保存
+- 結果コピー
+
+### Stripe purchase flow
+
+- 一回だけの詳細鑑定: **¥480 / 買い切り**
+- LUMINA Plus: **¥980 / 月・自動更新**
+- Stripe-hosted Checkout Session
+- サーバー側で固定した価格とプランのみ購入可能
+- 購入成功・キャンセル画面
+- Checkout Session取得による購入結果確認
+- Stripe Customer Portalによる月額契約管理・解約導線
+- Webhook署名検証
+- 特定商取引法に基づく表記、利用規約、プライバシーポリシー
+- Stripeまたは販売者設定が不足している場合は購入ボタンを安全に無効化
+
+## Quick start
+
+Node.js 20以上が必要です。
 
 ```bash
 npm install
 npm run dev
 ```
 
-ブラウザで **http://localhost:5173** を開きます。
+ブラウザで `http://localhost:5173` を開きます。静的な購入画面も確認できますが、Cloudflare Pages Functionsを使う決済APIはCloudflare環境またはWrangler環境で動作します。
 
-| コマンド | 内容 |
+| Command | Purpose |
 | --- | --- |
-| `npm run dev` | ローカル開発サーバーを起動 |
-| `npm run lint` | JavaScript 構文と必須ファイルを検査 |
-| `npm test -- --run` | 鑑定、回数、連続日数、保存をテスト |
-| `npm run build` | `dist/` に静的サイトを生成 |
-| `npm run preview` | ビルド済み `dist/` を確認 |
+| `npm run dev` | ローカル静的サーバー |
+| `npm run lint` | JavaScriptとFunctionsの構文検査 |
+| `npm test -- --run` | 鑑定・保存・Checkout・Webhook署名テスト |
+| `npm run build` | `dist/`へ静的サイトを生成 |
+| `npm run preview` | ビルド済みサイトを確認 |
 
-## アーキテクチャ
+## Architecture
 
 ```mermaid
 flowchart LR
-    U[ユーザー] --> LP[静的 LP / HTML + CSS]
-    LP --> UI[鑑定フォーム]
-    UI --> F[決定的な鑑定ロジック]
-    F --> R[結果カード]
-    R --> LS[(localStorage)]
-    R --> P[プレミアム価値のプレビュー]
-    GH[GitHub push / PR] --> CI[GitHub Actions]
-    CI --> L[Lint]
-    CI --> T[Test]
-    CI --> B[Build]
-    B --> A[dist artifact]
+    U[User] --> LP[Landing page]
+    LP --> F[Free reading engine]
+    F --> LS[(localStorage)]
+    LP --> P[Purchase page]
+    P --> CF[Cloudflare Pages Function]
+    CF --> SC[Stripe Checkout]
+    SC --> S[Success page]
+    SC --> W[Signed webhook]
+    S --> R[Retrieve Checkout Session]
+    S --> CP[Stripe Customer Portal]
+    GH[GitHub main] --> CI[GitHub Actions]
+    CI --> TEST[Lint / Test / Build]
+    GH --> DEPLOY[Cloudflare Pages deploy]
 ```
 
-入力情報は外部へ送信されません。日付・テーマ・任意入力をハッシュ化して、用意した安全な文章セットから同じ日の同じ入力に同じ結果を返します。詳細は [docs/architecture.md](docs/architecture.md) を参照してください。
+### Current frontend
 
-## 成功サービスから参考にした設計
+- `index.html` — 無料鑑定LP
+- `purchase.html` — プラン選択・購入準備
+- `success.html` / `cancel.html` — Stripe復帰画面
+- `commercial.html` / `terms.html` / `privacy.html` — 購入関連表示
+- `src/fortune.js` — 決定的でテスト可能な鑑定ロジック
+- `src/storage.js` — ブラウザ保存アダプター
+- `src/checkout.js` — サーバー側プランカタログとCheckoutパラメータ
+- `src/stripe-signature.js` — Webhook HMAC署名検証
 
-調査では、LINE占いの「複数相談モードと初回無料価値」、ココナラの「選択肢・比較・匿名性」、cocoloniの「豊富な無料体験から低価格の特別鑑定」、Co–Starの「日替わりパーソナライズとフリーミアム」を共通パターンとして整理しました。ブランド、コピー、見た目はコピーせず、構造だけを参考にしています。
+### Cloudflare Pages Functions
 
-詳細と出典は [docs/market-research.md](docs/market-research.md) にあります。
+- `/api/checkout-config`
+- `/api/create-checkout-session`
+- `/api/checkout-session`
+- `/api/create-portal-session`
+- `/api/stripe-webhook`
 
-## GPT Image 2 とデザイン
+Stripe Checkout Sessionは購入のたびにサーバー側で新しく作成します。価格、通貨、買い切り・月額の区分はブラウザから受け取らず、`src/checkout.js`の許可済みカタログから生成します。
 
-- 公式モデルページ: https://developers.openai.com/api/docs/models/gpt-image-2
-- 公式画像生成ガイド: https://developers.openai.com/api/docs/guides/image-generation
-- 生成コンセプト: 深い夜空、紫のオーロラ、金色の輪郭、光る水晶、静かで上質な日本語タイポグラフィ
-- 実装資産: `public/hero-oracle.svg`、`styles.css`、`docs/assets/generated-readme-hero.png`
+## Stripe production settings
 
-デザイン規則は [docs/design-system.md](docs/design-system.md) にまとめています。
+実課金を有効化するには、Cloudflare PagesのVariables and Secretsに以下を設定します。実値はリポジトリへコミットしません。
+
+- `STRIPE_SECRET_KEY`
+- `STRIPE_WEBHOOK_SECRET`
+- `PUBLIC_SITE_URL`
+- `SELLER_NAME`
+- `SELLER_ADDRESS`
+- `SUPPORT_EMAIL`
+
+詳細は [docs/stripe-setup.md](docs/stripe-setup.md) を参照してください。
+
+## Security
+
+- カード情報はStripe-hosted Checkoutが直接収集
+- Checkout作成は同一オリジンのPOSTのみ
+- 金額とプランはサーバー側で固定
+- Session ID形式の検証
+- Webhookの未加工本文、タイムスタンプ、HMAC SHA-256署名検証
+- APIレスポンスは `Cache-Control: no-store`
+- Secretや実ユーザーデータをGitへ保存しない
+
+## Data and limitations
+
+無料鑑定データはブラウザ内にだけ保存されます。現在のWebhookは署名済みイベントを検証・受領しますが、ユーザー認証やデータベースがないため、永続的な有料権限付与はまだ行いません。本番で有料コンテンツを恒久的に解放する場合は、認証、データベース、Webhookイベント台帳、権限テーブル、再送時の冪等性が必要です。
+
+## Ethics
+
+- 不安や恐怖を使って購入を迫りません。
+- 偽のカウントダウン、残席、架空レビューを表示しません。
+- 無料枠、価格、自動更新、解約条件を購入前に表示します。
+- 占いは娯楽と自己理解を目的とし、医療・法律・金融の専門的助言を代替しません。
+
+## Research and design
+
+- [Market research](docs/market-research.md)
+- [Design system](docs/design-system.md)
+- [Architecture](docs/architecture.md)
+- [Deployment](docs/deployment.md)
+- [Stripe setup](docs/stripe-setup.md)
+- [Local setup](docs/setup.md)
+- [Contributor guide](CODEX.md)
+
+OpenAI references:
+
+- https://developers.openai.com/api/docs/models/gpt-image-2
+- https://developers.openai.com/api/docs/guides/image-generation
+
+Stripe references:
+
+- https://docs.stripe.com/api/checkout/sessions/create
+- https://docs.stripe.com/checkout/quickstart
+- https://docs.stripe.com/webhooks
 
 ## CI
 
-`.github/workflows/ci.yml` は `push`、`pull_request`、手動実行に対応し、Node.js 22、`npm ci`、lint、test、build、`lumina-fortune-site` artifact 作成を行います。
-
-## 本番化に必要なもの
-
-現在は安全に試せるフロントエンドのみです。本番サービスでは最低限、次が必要です。
-
-- 認証とアカウント削除を提供するバックエンド API
-- PostgreSQL などのデータベースと暗号化・保持期間ポリシー
-- 決済事業者連携、特定商取引法表示、更新・解約・返金導線
-- 占い文章をレビュー・配信する CMS と専門家による監修
-- 同意管理付き分析、プライバシーポリシー、利用規約
-- 医療・法律・金融・自傷など高リスク相談の安全ガード
-- エラー監視、バックアップ、レート制限、脆弱性管理
-
-想定 Secrets 名だけを記載します（実値はコミットしません）。
-
-- `DATABASE_URL`
-- `AUTH_SECRET`
-- `PAYMENT_SECRET_KEY`
-- `PAYMENT_WEBHOOK_SECRET`
-- `ANALYTICS_WRITE_KEY`
-
-## 倫理方針
-
-- カウントダウン、偽の残席、恐怖を使った課金誘導は実装しません。
-- 結果は未来の断定ではなく、自己理解と行動の候補として提示します。
-- 医療・法律・金融上の助言を代替しません。
-- 無料枠、価格、更新条件、解約方法を購入前に明示する設計です。
-
-## ドキュメント
-
-- [初期設定](docs/setup.md)
-- [アーキテクチャ](docs/architecture.md)
-- [市場調査](docs/market-research.md)
-- [デザインシステム](docs/design-system.md)
-- [開発者ガイド](CODEX.md)
+GitHub Actions runs on push, pull request and manual dispatch. It installs dependencies, checks JavaScript and Cloudflare Functions, runs Node tests, builds all static pages and uploads the `lumina-fortune-site` artifact.
 
 ## License
 
