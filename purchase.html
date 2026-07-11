@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#090c2b">
+  <meta name="description" content="LUMINAの詳細鑑定・月額プランを選択し、Stripe Checkoutで安全に購入できます。">
+  <title>プランを選ぶ｜LUMINA</title>
+  <link rel="icon" href="/public/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/public/purchase.css">
+</head>
+<body class="checkout-page">
+  <a class="skip-link" href="#main">本文へ移動</a>
+  <header class="checkout-header">
+    <a class="brand" href="/"><span class="brand-mark">☾</span><span>LUMINA</span></a>
+    <a class="back-link" href="/">無料鑑定へ戻る</a>
+  </header>
+
+  <main id="main" class="checkout-main">
+    <section class="checkout-intro">
+      <p class="eyebrow"><span></span>SECURE CHECKOUT</p>
+      <h1>今の気づきを、<br><em>もう一段深く。</em></h1>
+      <p>必要な深さだけ選べます。購入前に価格・更新条件・解約方法を明確に表示し、カード情報はStripeが安全に取り扱います。</p>
+      <div class="checkout-trust"><span>✓ Stripe決済</span><span>✓ 隠れた追加料金なし</span><span>✓ 月額は管理画面から解約</span></div>
+    </section>
+
+    <section class="checkout-shell glass-card" aria-labelledby="plan-heading">
+      <div class="checkout-topline"><div><span>販売者</span><strong id="seller-name">確認中</strong></div><div><span>決済環境</span><strong id="checkout-mode">確認中</strong></div></div>
+      <h2 id="plan-heading">購入するプランを選択</h2>
+
+      <label class="checkout-email"><span>領収・確認メール <small>任意。未入力ならStripe画面で入力します</small></span><input id="checkout-email" type="email" autocomplete="email" placeholder="you@example.com"></label>
+
+      <div class="checkout-plan-grid">
+        <article class="checkout-plan">
+          <div><span class="pill">ONE TIME</span><h3>一回だけの詳細鑑定</h3><p class="checkout-price"><strong>¥480</strong><span>買い切り</span></p></div>
+          <ul><li>選んだテーマの詳細結果</li><li>7日間の行動ヒント</li><li>振り返り質問3つ</li><li>自動更新なし</li></ul>
+          <button class="button button-ghost checkout-button" type="button" data-checkout-plan="detailed" disabled><span data-button-label>¥480で購入する</span><b>→</b></button>
+        </article>
+
+        <article class="checkout-plan featured">
+          <div><span class="pill">MONTHLY</span><h3>LUMINA Plus</h3><p class="checkout-price"><strong>¥980</strong><span>/ 月・自動更新</span></p></div>
+          <ul><li>テーマ別7日間リーディング</li><li>鑑定履歴と振り返りノート</li><li>追加質問の深掘りガイド</li><li>Stripe管理画面から解約</li></ul>
+          <button class="button button-gold checkout-button" type="button" data-checkout-plan="plus" disabled><span data-button-label>月額プランを始める</span><b>→</b></button>
+        </article>
+      </div>
+
+      <p id="checkout-status" class="checkout-status" role="status" aria-live="polite">決済設定を確認しています。</p>
+      <div class="checkout-notes"><p>月額プランは解約するまで毎月自動更新されます。解約後は次回更新日以降の請求を停止します。</p><p>占いは娯楽・自己理解を目的とし、医療・法律・金融上の専門的助言を代替しません。</p></div>
+      <nav class="legal-links" aria-label="購入規約"><a href="/commercial.html">特定商取引法に基づく表記</a><a href="/terms.html">利用規約</a><a href="/privacy.html">プライバシーポリシー</a></nav>
+    </section>
+  </main>
+
+  <footer class="checkout-footer">© 2026 LUMINA · Payments securely processed by Stripe</footer>
+  <script type="module" src="/src/purchase.js"></script>
+</body>
+</html>
