@@ -1,0 +1,6 @@
+STRIPE_SECRET_KEY=sk_test_replace_me
+STRIPE_WEBHOOK_SECRET=whsec_replace_me
+PUBLIC_SITE_URL=http://localhost:8788
+SELLER_NAME=Your legal business name
+SELLER_ADDRESS=Your legal business address
+SUPPORT_EMAIL=support@example.com
