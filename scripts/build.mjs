@@ -1,9 +1,19 @@
 import { cp, mkdir, rm, writeFile } from 'node:fs/promises';
 
+const htmlFiles = [
+  'index.html',
+  'purchase.html',
+  'success.html',
+  'cancel.html',
+  'commercial.html',
+  'privacy.html',
+  'terms.html'
+];
+
 await rm('dist', { force: true, recursive: true });
 await mkdir('dist', { recursive: true });
 await Promise.all([
-  cp('index.html', 'dist/index.html'),
+  ...htmlFiles.map((file) => cp(file, `dist/${file}`)),
   cp('styles.css', 'dist/styles.css'),
   cp('src', 'dist/src', { recursive: true }),
   cp('public', 'dist/public', { recursive: true })
